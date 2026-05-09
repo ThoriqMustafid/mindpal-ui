@@ -1,5 +1,6 @@
 <script>
-  import { link, router } from 'svelte-spa-router';
+  import { link } from 'svelte-spa-router';
+  import active from 'svelte-spa-router/active';
 </script>
 
 <aside class="sidebar">
@@ -10,25 +11,20 @@
 
   <div class="nav-section">
     <div class="nav-section-label">Menu</div>
-    <a href="/dashboard" use:link class="nav-item {$router.location === '/dashboard' ? 'active' : ''}">
-      {#if $router.location === '/dashboard'}<div class="active-bar"></div>{/if}
+    <a href="/dashboard" use:link use:active class="nav-item">
       <div class="nav-icon ni-moss">🏠</div> Beranda
     </a>
-    <a href="/kuesioner" use:link class="nav-item {$router.location === '/kuesioner' ? 'active' : ''}">
-      {#if $router.location === '/kuesioner'}<div class="active-bar"></div>{/if}
+    <a href="/kuesioner" use:link use:active class="nav-item">
       <div class="nav-icon ni-lavender">📋</div> Kuesioner
     </a>
-    <a href="/chat" use:link class="nav-item {$router.location === '/chat' ? 'active chat-active' : ''}">
-      {#if $router.location === '/chat'}<div class="active-bar chat-bar"></div>{/if}
+    <a href="/chat" use:link use:active={{ className: 'active chat-active' }} class="nav-item">
       <div class="nav-icon ni-blush">💬</div> Chat Konselor
       <span class="nav-badge">1 baru</span>
     </a>
-    <a href="/komunitas" use:link class="nav-item {$router.location === '/komunitas' ? 'active komunitas-active' : ''}">
-      {#if $router.location === '/komunitas'}<div class="active-bar komunitas-bar"></div>{/if}
+    <a href="/komunitas" use:link use:active={{ className: 'active komunitas-active' }} class="nav-item">
       <div class="nav-icon ni-sky">👥</div> Komunitas
     </a>
-    <a href="/sumber-belajar" use:link class="nav-item {$router.location === '/sumber-belajar' ? 'active' : ''}">
-      {#if $router.location === '/sumber-belajar'}<div class="active-bar"></div>{/if}
+    <a href="/sumber-belajar" use:link use:active class="nav-item">
       <div class="nav-icon ni-amber">📚</div> Sumber Belajar
     </a>
   </div>

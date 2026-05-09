@@ -197,109 +197,100 @@
 
 <Sidebar />
 
-<main class="ml-[240px] flex-1 py-8 px-9 min-h-screen bg-cream flex flex-col">
-  <div class="flex items-center justify-between mb-8">
+<main class="ml-[240px] min-h-screen flex-1 bg-slate-50 p-8">
+  <div class="mx-auto flex w-full max-w-7xl flex-col gap-6">
+  <div class="mb-2 flex items-center justify-between">
     <div>
-      <button class="flex items-center gap-[6px] text-[0.85rem] text-text-mid cursor-pointer transition-colors duration-200 bg-transparent border-none font-sans hover:text-moss" on:click={goBack}>← Kembali ke Dashboard</button>
-      <h1 class="font-lora text-[1.55rem] font-semibold text-text-dark mt-[0.3rem]">Kuesioner Kesehatan Mental</h1>
-      <p class="text-[0.85rem] text-text-soft mt-[2px]">Luangkan 5–10 menit untuk menjawab dengan jujur. Semua data bersifat privat.</p>
+      <button class="flex cursor-pointer items-center gap-1.5 border-none bg-transparent text-sm text-slate-600 transition-colors duration-200 hover:text-indigo-600" on:click={goBack}>← Kembali ke Dashboard</button>
+      <h1 class="mt-1 text-4xl font-bold text-slate-900">Kuesioner Kesehatan Mental</h1>
+      <p class="mt-2 text-base leading-relaxed text-slate-600">Luangkan 5–10 menit untuk menjawab dengan jujur. Semua data bersifat privat.</p>
       {#if submitError}
-        <p class="text-[0.8rem] text-blush-dark mt-2">{submitError}</p>
+        <p class="mt-2 text-sm text-red-600">{submitError}</p>
       {/if}
     </div>
   </div>
 
-  <div class="bg-white rounded-2xl border border-sand py-5 px-6 mb-5">
-    <div class="flex justify-between items-center mb-3">
-      <span class="text-[0.8rem] text-text-mid font-medium">{showResultScreen ? 'Kuesioner selesai!' : `Pertanyaan ${current + 1} dari ${questions.length}`}</span>
-      <span class="text-[0.78rem] text-text-soft">{showResultScreen ? '100% selesai' : `${progressPct}% selesai`}</span>
+  <div class="rounded-2xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
+    <div class="mb-3 flex items-center justify-between">
+      <span class="text-sm font-medium text-slate-700">{showResultScreen ? 'Kuesioner selesai!' : `Pertanyaan ${current + 1} dari ${questions.length}`}</span>
+      <span class="text-sm text-slate-500">{showResultScreen ? '100% selesai' : `${progressPct}% selesai`}</span>
     </div>
-    <div class="h-2 bg-sand rounded-full overflow-hidden">
-      <div class="h-full rounded-full bg-gradient-to-r from-sage to-sage-dark transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]" style="width: {showResultScreen ? 100 : progressPct}%"></div>
+    <div class="h-2 overflow-hidden rounded-full bg-slate-200">
+      <div class="h-full rounded-full bg-indigo-600 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]" style="width: {showResultScreen ? 100 : progressPct}%"></div>
     </div>
-    <div class="flex justify-between mt-3">
+    <div class="mt-4 grid grid-cols-4 gap-3 md:grid-cols-8">
       {#each questions as q, i}
-        <!-- svelte-ignore a11y_click_events_have_key_events -->
-        <!-- svelte-ignore a11y_no_static_element_interactions -->
-        <div class="flex flex-col items-center gap-1 cursor-pointer" on:click={() => { if (!showResultScreen) goTo(i); }}>
-          <div class="w-[22px] h-[22px] rounded-full border-2 flex items-center justify-center text-[0.6rem] font-medium transition-all duration-200 {showResultScreen || (i < current && answers[i] !== null) ? 'bg-sage border-sage text-white' : (i === current && !showResultScreen ? 'bg-moss border-moss text-white shadow-[0_0_0_4px_rgba(74,103,65,0.15)]' : 'border-sand bg-white text-text-soft')}">
+        <div class="flex cursor-pointer flex-col items-center gap-1" on:click={() => { if (!showResultScreen) goTo(i); }}>
+          <div class="flex h-[24px] w-[24px] items-center justify-center rounded-full border-2 text-[0.62rem] font-medium transition-all duration-200 {showResultScreen || (i < current && answers[i] !== null) ? 'border-indigo-600 bg-indigo-600 text-white' : (i === current && !showResultScreen ? 'border-indigo-600 bg-indigo-600 text-white shadow-[0_0_0_4px_rgba(79,70,229,0.2)]' : 'border-slate-300 bg-white text-slate-500')}">
             {i + 1}
           </div>
-          <div class="text-[0.6rem] text-text-soft">{sectionLabels[i]}</div>
+          <div class="text-[0.62rem] text-slate-500">{sectionLabels[i]}</div>
         </div>
       {/each}
     </div>
   </div>
 
-  <div class="grid grid-cols-[1fr_300px] gap-6 items-start">
-    <div class="bg-white rounded-[20px] border border-sand overflow-hidden flex flex-col {showResultScreen ? '' : 'min-h-[420px]'}">
+  <div class="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+    <div class="flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm {showResultScreen ? '' : 'min-h-[480px]'}">
       {#if !showResultScreen}
         {#key current}
           <div in:fly={{ x: 18, duration: 350, opacity: 0 }} class="flex flex-col flex-1">
-            <div class="pt-6 px-7">
-              <span class="inline-flex items-center gap-[6px] text-[0.72rem] font-medium tracking-[0.06em] uppercase py-[0.3rem] px-[0.85rem] rounded-full mb-4 {currentQuestion.catClass}">
+            <div class="px-8 pt-8">
+              <span class="mb-4 inline-flex items-center gap-[6px] rounded-full px-3 py-1 text-xs font-medium uppercase tracking-[0.06em] {currentQuestion.catClass}">
                 {currentQuestion.emoji} {currentQuestion.cat}
               </span>
-              <div class="text-[0.75rem] text-text-soft mb-2">Pertanyaan {currentQuestion.id} dari {questions.length}</div>
-              <div class="font-lora text-[1.3rem] font-semibold leading-[1.4] text-text-dark mb-2">{currentQuestion.text}</div>
-              <div class="text-[0.83rem] text-text-soft leading-[1.5] mb-6 italic">{currentQuestion.sub}</div>
+              <div class="mb-2 text-sm text-slate-500">Pertanyaan {currentQuestion.id} dari {questions.length}</div>
+              <div class="mb-3 text-2xl font-bold leading-tight text-slate-900">{currentQuestion.text}</div>
+              <div class="mb-8 text-base leading-relaxed text-slate-600">{currentQuestion.sub}</div>
             </div>
 
-            <div class="px-7 pb-7 flex-1 flex flex-col justify-between">
+            <div class="flex flex-1 flex-col justify-between px-8 pb-8">
               <div>
                 {#if currentQuestion.type === 'emoji'}
-                  <div class="grid grid-cols-5 gap-[0.6rem] mb-6">
+                  <div class="mb-8 grid grid-cols-2 gap-3 md:grid-cols-5">
                     {#each currentQuestion.options as opt, i}
-                      <!-- svelte-ignore a11y_click_events_have_key_events -->
-                      <!-- svelte-ignore a11y_no_static_element_interactions -->
-                      <div class="flex flex-col items-center gap-[0.4rem] py-3 px-2 rounded-[14px] border-[1.5px] cursor-pointer transition-all duration-200 hover:-translate-y-[2px] hover:border-sage hover:bg-sage-light {answers[current] === i ? 'border-moss bg-sage-light' : 'border-sand bg-cream'}" on:click={() => selectEmoji(i)}>
+                      <div class="flex cursor-pointer flex-col items-center gap-2 rounded-2xl border px-3 py-4 transition-all duration-200 hover:-translate-y-[2px] hover:border-indigo-300 hover:bg-indigo-50 {answers[current] === i ? 'border-indigo-600 bg-indigo-50' : 'border-slate-200 bg-white'}" on:click={() => selectEmoji(i)}>
                         <div class="text-[1.8rem]">{opt.e}</div>
-                        <div class="text-[0.65rem] text-text-soft text-center">{opt.l}</div>
+                        <div class="text-center text-xs text-slate-600">{opt.l}</div>
                       </div>
                     {/each}
                   </div>
                 {:else if currentQuestion.type === 'options'}
-                  <div class="flex flex-col gap-[0.6rem] mb-6">
+                  <div class="mb-8 grid gap-3">
                     {#each currentQuestion.options as opt, i}
-                      <!-- svelte-ignore a11y_click_events_have_key_events -->
-                      <!-- svelte-ignore a11y_no_static_element_interactions -->
-                      <div class="flex items-center gap-4 py-[0.85rem] px-[1.1rem] rounded-[14px] border-[1.5px] cursor-pointer transition-all duration-200 text-left font-sans hover:translate-x-[3px] hover:border-sage hover:bg-sage-light {answers[current] === i ? 'border-moss bg-sage-light' : 'border-sand bg-cream'}" on:click={() => selectOption(i)}>
-                        <div class="w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all duration-200 relative {answers[current] === i ? 'border-moss bg-moss' : 'border-sand-dark bg-white'}">
+                      <div class="flex cursor-pointer items-center gap-4 rounded-2xl border px-5 py-4 text-left transition-all duration-200 hover:translate-x-[3px] hover:border-indigo-300 hover:bg-indigo-50 {answers[current] === i ? 'border-indigo-600 bg-indigo-50' : 'border-slate-200 bg-white'}" on:click={() => selectOption(i)}>
+                        <div class="relative flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 transition-all duration-200 {answers[current] === i ? 'border-indigo-600 bg-indigo-600' : 'border-slate-300 bg-white'}">
                           <div class="w-2 h-2 rounded-full bg-white transition-opacity duration-200 {answers[current] === i ? 'opacity-100' : 'opacity-0'}"></div>
                         </div>
-                        <span class="text-[0.88rem] text-text-mid">{opt.text}</span>
+                        <span class="text-sm text-slate-700">{opt.text}</span>
                       </div>
                     {/each}
                   </div>
                 {:else if currentQuestion.type === 'scale'}
-                  <div class="mb-6">
-                    <div class="flex justify-between text-[0.72rem] text-text-soft mb-2">
+                  <div class="mb-8">
+                    <div class="mb-2 flex justify-between text-xs text-slate-500">
                       <span>{currentQuestion.scaleMin}</span>
                       <span>{currentQuestion.scaleMax}</span>
                     </div>
-                    <div class="relative h-9 flex items-center gap-[6px]">
+                    <div class="grid grid-cols-5 gap-2 md:grid-cols-10">
                       {#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as n}
-                        <!-- svelte-ignore a11y_click_events_have_key_events -->
-                        <!-- svelte-ignore a11y_no_static_element_interactions -->
-                        <div class="flex-1 h-9 rounded-[9px] border-[1.5px] cursor-pointer flex items-center justify-center text-[0.8rem] font-medium transition-all duration-200 {answers[current] === n ? 'border-moss bg-moss text-white' : 'border-sand bg-cream text-text-soft hover:border-sage hover:bg-sage-light'}" on:click={() => selectScale(n)}>
+                        <div class="flex h-10 cursor-pointer items-center justify-center rounded-xl border text-sm font-medium transition-all duration-200 {answers[current] === n ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-200 bg-white text-slate-500 hover:border-indigo-300 hover:bg-indigo-50'}" on:click={() => selectScale(n)}>
                           {n}
                         </div>
                       {/each}
                     </div>
                   </div>
                 {:else if currentQuestion.type === 'textarea'}
-                  <div class="mb-6">
-                    <textarea rows="5" placeholder={currentQuestion.placeholder} bind:value={answers[current]} class="w-full border-[1.5px] border-sand rounded-[14px] py-[0.9rem] px-4 font-sans text-[0.88rem] text-text-dark bg-cream resize-none outline-none leading-[1.6] transition-colors duration-200 focus:border-sage focus:bg-white placeholder:text-text-soft"></textarea>
+                  <div class="mb-8">
+                    <textarea rows="6" placeholder={currentQuestion.placeholder} bind:value={answers[current]} class="w-full resize-none rounded-2xl border border-slate-200 bg-white px-4 py-4 text-sm leading-relaxed text-slate-700 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-indigo-600"></textarea>
                   </div>
                 {/if}
               </div>
 
-              <div class="flex justify-between items-center pt-4 border-t border-sand">
-                <button class="bg-transparent border-[1.5px] border-sand text-text-mid py-[0.65rem] px-[1.4rem] rounded-full font-sans text-[0.85rem] cursor-pointer transition-all duration-200 hover:border-sage-dark hover:text-moss {current === 0 ? 'invisible' : ''}" on:click={prevQ}>← Sebelumnya</button>
-                <!-- svelte-ignore a11y_click_events_have_key_events -->
-                <!-- svelte-ignore a11y_no_static_element_interactions -->
-                <span class="text-[0.75rem] text-text-soft cursor-pointer transition-colors duration-200 hover:text-moss" on:click={skipQ}>Lewati</span>
-                <button class="border-none py-[0.65rem] px-[1.75rem] rounded-full font-sans text-[0.85rem] font-medium transition-all duration-200 flex items-center gap-[6px] {canProceed && !isSubmitting ? 'bg-moss text-white hover:bg-sage-dark hover:-translate-y-[1px] cursor-pointer' : 'bg-sand-dark text-white cursor-not-allowed'}" disabled={!canProceed || isSubmitting} on:click={nextQ}>
+              <div class="flex items-center justify-between border-t border-slate-200 pt-5">
+                <button class="cursor-pointer rounded-full border border-slate-200 bg-white px-6 py-2.5 text-sm text-slate-700 transition-all duration-200 hover:border-indigo-400 hover:text-indigo-600 {current === 0 ? 'invisible' : ''}" on:click={prevQ}>← Sebelumnya</button>
+                <span class="cursor-pointer text-sm text-slate-500 transition-colors duration-200 hover:text-indigo-600" on:click={skipQ}>Lewati</span>
+                <button class="flex items-center gap-1.5 rounded-full border-none px-7 py-2.5 text-sm font-medium transition-all duration-200 {canProceed && !isSubmitting ? 'cursor-pointer bg-indigo-600 text-white hover:-translate-y-[1px] hover:bg-indigo-700' : 'cursor-not-allowed bg-slate-300 text-white'}" disabled={!canProceed || isSubmitting} on:click={nextQ}>
                   {isSubmitting ? 'Mengirim...' : (current === questions.length - 1 ? 'Lihat Hasil ✨' : 'Lanjut →')}
                 </button>
               </div>
@@ -307,63 +298,63 @@
           </div>
         {/key}
       {:else}
-        <div in:fly={{ y: 12, duration: 400, opacity: 0 }} class="flex flex-col items-center text-center p-8">
-          <div class="w-12 h-12 rounded-full bg-sage-light flex items-center justify-center text-[1.5rem] mx-auto mb-3">✨</div>
-          <div class="font-lora text-[1.4rem] font-semibold text-text-dark mb-2">Analisis Selesai!</div>
-          <div class="text-[0.88rem] text-text-mid leading-[1.6] max-w-[380px] mx-auto mb-6">Berdasarkan jawabanmu, AI MindPal telah menyusun profil kondisi mentalmu. Berikut ringkasannya.</div>
+        <div in:fly={{ y: 12, duration: 400, opacity: 0 }} class="flex flex-col items-center p-10 text-center">
+          <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-50 text-[1.5rem]">✨</div>
+          <div class="mb-2 text-3xl font-bold text-slate-900">Analisis Selesai!</div>
+          <div class="mx-auto mb-8 max-w-[420px] text-base leading-relaxed text-slate-600">Berdasarkan jawabanmu, AI MindPal telah menyusun profil kondisi mentalmu. Berikut ringkasannya.</div>
 
-          <div class="mx-auto mb-6 relative w-[140px] h-[140px]">
+          <div class="relative mx-auto mb-8 h-[140px] w-[140px]">
             <svg width="140" height="140" viewBox="0 0 140 140">
-              <circle cx="70" cy="70" r="56" fill="none" class="stroke-sand" stroke-width="12"/>
-              <circle cx="70" cy="70" r="56" fill="none" class="stroke-sage transition-[stroke-dasharray] duration-1000 ease-in-out" stroke-width="12"
+              <circle cx="70" cy="70" r="56" fill="none" class="stroke-slate-200" stroke-width="12"/>
+              <circle cx="70" cy="70" r="56" fill="none" class="stroke-indigo-600 transition-[stroke-dasharray] duration-1000 ease-in-out" stroke-width="12"
                 stroke-dasharray="{Math.round(2*Math.PI*56*score/100)} {Math.round(2*Math.PI*56)}"
                 stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 70 70)"/>
             </svg>
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-lora text-[2rem] font-semibold text-moss">
+            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[2rem] font-semibold text-indigo-600">
               {score}
-              <span class="block font-sans text-[0.7rem] font-normal text-text-soft">/ 100</span>
+              <span class="block text-[0.72rem] font-normal text-slate-500">/ 100</span>
             </div>
           </div>
 
-          <div class="flex gap-2 justify-center flex-wrap mb-6">
-            <span class="py-[0.3rem] px-[0.9rem] rounded-full text-[0.75rem] font-medium bg-sage-light text-moss">Mood: {questionnaireResult?.mood_status ?? 'Cukup Baik'}</span>
-            <span class="py-[0.3rem] px-[0.9rem] rounded-full text-[0.75rem] font-medium bg-amber-light text-amber-dark">Stres: {questionnaireResult?.stress_status ?? 'Sedang'}</span>
-            <span class="py-[0.3rem] px-[0.9rem] rounded-full text-[0.75rem] font-medium bg-sage-light text-moss">Tidur: {questionnaireResult?.sleep_status ?? 'Membaik'}</span>
-            <span class="py-[0.3rem] px-[0.9rem] rounded-full text-[0.75rem] font-medium bg-blush-light text-blush-dark">Kecemasan: {questionnaireResult?.anxiety_status ?? 'Perlu Perhatian'}</span>
+          <div class="mb-8 flex flex-wrap justify-center gap-2">
+            <span class="rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700">Mood: {questionnaireResult?.mood_status ?? 'Cukup Baik'}</span>
+            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">Stres: {questionnaireResult?.stress_status ?? 'Sedang'}</span>
+            <span class="rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700">Tidur: {questionnaireResult?.sleep_status ?? 'Membaik'}</span>
+            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">Kecemasan: {questionnaireResult?.anxiety_status ?? 'Perlu Perhatian'}</span>
           </div>
 
-          <div class="mt-6 w-full text-left">
-            <div class="text-[0.82rem] font-medium text-text-dark mb-3">Rekomendasi untukmu</div>
-            <div class="flex items-center gap-[0.85rem] py-[0.85rem] px-4 bg-cream rounded-xl border border-sand mb-2.5 cursor-pointer transition-colors duration-200 hover:border-sage">
-              <div class="w-9 h-9 rounded-[10px] bg-lavender-light flex items-center justify-center text-base shrink-0">🧘</div>
+          <div class="mt-2 w-full text-left">
+            <div class="mb-3 text-sm font-medium text-slate-900">Rekomendasi untukmu</div>
+            <div class="mb-2.5 flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 transition-colors duration-200 hover:border-indigo-300">
+              <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-base">🧘</div>
               <div>
-                <h4 class="text-[0.82rem] font-medium text-text-dark">{recommendations[0] ?? fallbackRecommendations[0]}</h4>
-                <p class="text-[0.72rem] text-text-soft">Cocok untuk mengurangi kecemasan yang sedang kamu alami</p>
+                <h4 class="text-sm font-medium text-slate-900">{recommendations[0] ?? fallbackRecommendations[0]}</h4>
+                <p class="text-xs text-slate-500">Cocok untuk mengurangi kecemasan yang sedang kamu alami</p>
               </div>
-              <span class="ml-auto text-text-soft">›</span>
+              <span class="ml-auto text-slate-400">›</span>
             </div>
-            <div class="flex items-center gap-[0.85rem] py-[0.85rem] px-4 bg-cream rounded-xl border border-sand mb-2.5 cursor-pointer transition-colors duration-200 hover:border-sage">
-              <div class="w-9 h-9 rounded-[10px] bg-sage-light flex items-center justify-center text-base shrink-0">💤</div>
+            <div class="mb-2.5 flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 transition-colors duration-200 hover:border-indigo-300">
+              <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-base">💤</div>
               <div>
-                <h4 class="text-[0.82rem] font-medium text-text-dark">{recommendations[1] ?? fallbackRecommendations[1]}</h4>
-                <p class="text-[0.72rem] text-text-soft">Tingkatkan rutinitas tidurmu dengan teknik sederhana</p>
+                <h4 class="text-sm font-medium text-slate-900">{recommendations[1] ?? fallbackRecommendations[1]}</h4>
+                <p class="text-xs text-slate-500">Tingkatkan rutinitas tidurmu dengan teknik sederhana</p>
               </div>
-              <span class="ml-auto text-text-soft">›</span>
+              <span class="ml-auto text-slate-400">›</span>
             </div>
-            <div class="flex items-center gap-[0.85rem] py-[0.85rem] px-4 bg-cream rounded-xl border border-sand mb-2.5 cursor-pointer transition-colors duration-200 hover:border-sage">
-              <div class="w-9 h-9 rounded-[10px] bg-blush-light flex items-center justify-center text-base shrink-0">💬</div>
+            <div class="mb-2.5 flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 transition-colors duration-200 hover:border-indigo-300">
+              <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-base">💬</div>
               <div>
-                <h4 class="text-[0.82rem] font-medium text-text-dark">{recommendations[2] ?? fallbackRecommendations[2]}</h4>
-                <p class="text-[0.72rem] text-text-soft">Disarankan untuk mendiskusikan kecemasan lebih lanjut</p>
+                <h4 class="text-sm font-medium text-slate-900">{recommendations[2] ?? fallbackRecommendations[2]}</h4>
+                <p class="text-xs text-slate-500">Disarankan untuk mendiskusikan kecemasan lebih lanjut</p>
               </div>
-              <span class="ml-auto text-text-soft">›</span>
+              <span class="ml-auto text-slate-400">›</span>
             </div>
           </div>
 
-          <div class="flex gap-3 justify-center flex-wrap mt-6">
-            <button class="py-3 px-6 rounded-full text-[0.88rem] font-medium cursor-pointer transition-all duration-200 border-none font-sans bg-moss text-white hover:bg-sage-dark">Lihat Laporan Lengkap</button>
-            <button class="py-3 px-6 rounded-full text-[0.88rem] font-medium cursor-pointer transition-all duration-200 border-[1.5px] border-sand font-sans bg-white text-text-mid hover:border-sage hover:text-moss" on:click={resetQuiz}>Ulangi Kuesioner</button>
-            <button class="py-3 px-6 rounded-full text-[0.88rem] font-medium cursor-pointer transition-all duration-200 border-[1.5px] border-sand font-sans bg-white text-text-mid hover:border-sage hover:text-moss">Booking Konselor</button>
+          <div class="mt-8 flex flex-wrap justify-center gap-3">
+            <button class="cursor-pointer rounded-full border-none bg-indigo-600 px-6 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-indigo-700">Lihat Laporan Lengkap</button>
+            <button class="cursor-pointer rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-700 transition-all duration-200 hover:border-indigo-400 hover:text-indigo-600" on:click={resetQuiz}>Ulangi Kuesioner</button>
+            <button class="cursor-pointer rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-700 transition-all duration-200 hover:border-indigo-400 hover:text-indigo-600">Booking Konselor</button>
           </div>
         </div>
       {/if}
@@ -371,62 +362,63 @@
 
     <div>
       {#if !showResultScreen}
-        <div class="bg-white rounded-2xl border border-sand py-[1.1rem] px-5 mb-4">
-          <h3 class="text-[0.83rem] font-medium text-text-dark mb-[0.85rem]">💡 Tips menjawab</h3>
-          <div class="flex gap-3 items-start p-3 bg-cream rounded-[10px] border border-sand mb-2">
+        <div class="mb-4 rounded-3xl border border-slate-200 bg-white px-5 py-5 shadow-sm">
+          <h3 class="mb-4 text-lg font-semibold text-slate-900">💡 Tips menjawab</h3>
+          <div class="mb-2 flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
             <div class="text-base shrink-0">🎯</div>
-            <div class="text-[0.76rem] text-text-mid leading-[1.45]">Jawab berdasarkan perasaan kamu dalam <strong>7 hari terakhir</strong>, bukan hari ini saja.</div>
+            <div class="text-sm leading-relaxed text-slate-600">Jawab berdasarkan perasaan kamu dalam <strong>7 hari terakhir</strong>, bukan hari ini saja.</div>
           </div>
-          <div class="flex gap-3 items-start p-3 bg-cream rounded-[10px] border border-sand mb-2">
+          <div class="mb-2 flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
             <div class="text-base shrink-0">🔒</div>
-            <div class="text-[0.76rem] text-text-mid leading-[1.45]">Semua jawaban bersifat <strong>privat</strong> dan hanya digunakan untuk analisis pribadimu.</div>
+            <div class="text-sm leading-relaxed text-slate-600">Semua jawaban bersifat <strong>privat</strong> dan hanya digunakan untuk analisis pribadimu.</div>
           </div>
-          <div class="flex gap-3 items-start p-3 bg-cream rounded-[10px] border border-sand mb-2">
+          <div class="mb-2 flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
             <div class="text-base shrink-0">✨</div>
-            <div class="text-[0.76rem] text-text-mid leading-[1.45]">Tidak ada jawaban benar atau salah. Jujurlah dengan dirimu sendiri.</div>
+            <div class="text-sm leading-relaxed text-slate-600">Tidak ada jawaban benar atau salah. Jujurlah dengan dirimu sendiri.</div>
           </div>
         </div>
-        <div class="bg-white rounded-2xl border border-sand py-[1.1rem] px-5 mb-4">
-          <h3 class="text-[0.83rem] font-medium text-text-dark mb-[0.85rem]">📝 Progres jawabanmu</h3>
-          <div class="flex flex-col gap-2">
+        <div class="mb-4 rounded-3xl border border-slate-200 bg-white px-5 py-5 shadow-sm">
+          <h3 class="mb-4 text-lg font-semibold text-slate-900">📝 Progres jawabanmu</h3>
+          <div class="flex flex-col gap-2.5">
             {#each questions as q, i}
-              <div class="flex items-center gap-[0.6rem] text-[0.75rem] text-text-mid">
-                <div class="w-[18px] h-[18px] rounded-full flex items-center justify-center text-[0.65rem] shrink-0 {i === current ? 'bg-moss text-white' : (answers[i] !== null ? 'bg-sage-light text-moss' : 'bg-sand text-text-soft')}">
+              <div class="flex items-center gap-2.5 text-sm text-slate-600">
+                <div class="flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-full text-[0.68rem] {i === current ? 'bg-indigo-600 text-white' : (answers[i] !== null ? 'bg-indigo-100 text-indigo-600' : 'bg-slate-200 text-slate-500')}">
                   {i === current ? '→' : (answers[i] !== null ? '✓' : '·')}
                 </div>
-                <span class="{answers[i] !== null || i === current ? 'text-text-dark' : 'text-text-soft'}">{sectionLabels[i]}</span>
+                <span class="{answers[i] !== null || i === current ? 'text-slate-900' : 'text-slate-500'}">{sectionLabels[i]}</span>
               </div>
             {/each}
           </div>
         </div>
       {:else}
-        <div in:fly={{ y: 12, duration: 400, opacity: 0 }} class="bg-white rounded-2xl border border-sand py-[1.1rem] px-5 mb-4">
-          <h3 class="text-[0.83rem] font-medium text-text-dark mb-[0.85rem]">📊 Ringkasan Jawaban</h3>
-          <div class="flex flex-col gap-2">
+        <div in:fly={{ y: 12, duration: 400, opacity: 0 }} class="mb-4 rounded-3xl border border-slate-200 bg-white px-5 py-5 shadow-sm">
+          <h3 class="mb-4 text-lg font-semibold text-slate-900">📊 Ringkasan Jawaban</h3>
+          <div class="flex flex-col gap-2.5">
             {#each sectionLabels as l}
-              <div class="flex items-center gap-[0.6rem] text-[0.75rem] text-text-mid">
-                <div class="w-[18px] h-[18px] rounded-full flex items-center justify-center text-[0.65rem] shrink-0 bg-sage-light text-moss">✓</div>
-                <span class="text-text-dark">{l}</span>
+              <div class="flex items-center gap-2.5 text-sm text-slate-600">
+                <div class="flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-full bg-indigo-100 text-[0.68rem] text-indigo-600">✓</div>
+                <span class="text-slate-900">{l}</span>
               </div>
             {/each}
           </div>
         </div>
-        <div in:fly={{ y: 12, duration: 400, opacity: 0 }} class="bg-white rounded-2xl border border-sand py-[1.1rem] px-5 mb-4">
-          <h3 class="text-[0.83rem] font-medium text-text-dark mb-[0.85rem]">🔔 Langkah Selanjutnya</h3>
-          <div class="flex gap-3 items-start p-3 bg-cream rounded-[10px] border border-sand mb-2">
+        <div in:fly={{ y: 12, duration: 400, opacity: 0 }} class="mb-4 rounded-3xl border border-slate-200 bg-white px-5 py-5 shadow-sm">
+          <h3 class="mb-4 text-lg font-semibold text-slate-900">🔔 Langkah Selanjutnya</h3>
+          <div class="mb-2 flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
             <div class="text-base shrink-0">📋</div>
-            <div class="text-[0.76rem] text-text-mid leading-[1.45]">Laporan lengkap sudah tersedia di menu <strong>Laporan</strong>.</div>
+            <div class="text-sm leading-relaxed text-slate-600">Laporan lengkap sudah tersedia di menu <strong>Laporan</strong>.</div>
           </div>
-          <div class="flex gap-3 items-start p-3 bg-cream rounded-[10px] border border-sand mb-2">
+          <div class="mb-2 flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
             <div class="text-base shrink-0">💬</div>
-            <div class="text-[0.76rem] text-text-mid leading-[1.45]">Coba booking sesi konseling pertamamu — gratis untuk pengguna baru.</div>
+            <div class="text-sm leading-relaxed text-slate-600">Coba booking sesi konseling pertamamu — gratis untuk pengguna baru.</div>
           </div>
-          <div class="flex gap-3 items-start p-3 bg-cream rounded-[10px] border border-sand mb-2">
+          <div class="mb-2 flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
             <div class="text-base shrink-0">🔁</div>
-            <div class="text-[0.76rem] text-text-mid leading-[1.45]">Ulangi kuesioner ini setiap minggu untuk memantau perkembanganmu.</div>
+            <div class="text-sm leading-relaxed text-slate-600">Ulangi kuesioner ini setiap minggu untuk memantau perkembanganmu.</div>
           </div>
         </div>
       {/if}
     </div>
+  </div>
   </div>
 </main>
