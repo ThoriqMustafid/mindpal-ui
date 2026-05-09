@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --sage: #b5c9b1; --sage-light: #ddebd9; --sage-dark: #7a9e76;
+    --blush: #e8c9c1; --blush-light: #f5e6e2; --blush-dark: #c9857a;
+    --cream: #f7f3ed; --warm-white: #fdfaf6; --sand: #e8e0d4; --sand-dark: #c8bfb3;
+    --moss: #4a6741; --text-dark: #2d2a26; --text-mid: #5c5751; --text-soft: #8c8680;
+    --lavender: #c5bdd8; --lavender-light: #ebe7f2; --lavender-dark: #9389b8;
+    --sky: #bdd0e0; --sky-light: #e5eef6; --sky-dark: #4a7a9b;
+    --amber: #e8c87a; --amber-light: #f7f0d8; --amber-dark: #b89840;
+    --sidebar-w: 240px;
+  }
+  
+  html, body {
+    height: 100%;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--text-dark);
+    background: var(--cream);
+  }
+}

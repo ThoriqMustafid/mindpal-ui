@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MindPal — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --sage:#b5c9b1;--sage-light:#ddebd9;--sage-dark:#7a9e76;
+  --blush:#e8c9c1;--blush-light:#f5e6e2;--blush-dark:#c9857a;
+  --cream:#f7f3ed;--warm-white:#fdfaf6;--sand:#e8e0d4;--sand-dark:#c8bfb3;
+  --moss:#4a6741;--text-dark:#2d2a26;--text-mid:#5c5751;--text-soft:#8c8680;
+  --lavender:#c5bdd8;--lavender-light:#ebe7f2;--lavender-dark:#9389b8;
+  --sky:#bdd0e0;--sky-light:#e5eef6;--sky-dark:#6a9bbf;
+  --amber:#e8c87a;--amber-light:#f7f0d8;--amber-dark:#b89840;
+  --sidebar-w:240px;
+}
+
+html{font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text-dark);background:var(--cream)}
+body{display:flex;min-height:100vh;overflow-x:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:white;border-right:1px solid var(--sand);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;bottom:0;z-index:50;
+  padding:1.5rem 0;
+}
+
+.sidebar-logo{
+  display:flex;align-items:center;gap:10px;
+  padding:0 1.25rem 1.5rem;
+  border-bottom:1px solid var(--sand);margin-bottom:1rem;
+}
+.logo-mark{
+  width:34px;height:34px;background:var(--sage);
+  border-radius:50% 50% 50% 20%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Lora',serif;font-size:15px;color:white;font-weight:600;
+}
+.logo-text{font-family:'Lora',serif;font-size:1.2rem;font-weight:600;color:var(--moss)}
+
+.nav-section{padding:0 0.75rem;margin-bottom:0.25rem}
+.nav-section-label{
+  font-size:0.68rem;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--text-soft);padding:0 0.5rem;margin-bottom:0.4rem;margin-top:0.75rem;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:0.6rem 0.75rem;border-radius:12px;
+  text-decoration:none;color:var(--text-mid);
+  font-size:0.88rem;font-weight:400;
+  transition:background .15s,color .15s;cursor:pointer;
+  position:relative;
+}
+.nav-item:hover{background:var(--cream);color:var(--text-dark)}
+.nav-item.active{background:var(--sage-light);color:var(--moss);font-weight:500}
+.nav-item.active::before{
+  content:'';position:absolute;left:-0.75rem;top:50%;transform:translateY(-50%);
+  width:3px;height:60%;background:var(--sage-dark);border-radius:0 4px 4px 0;
+}
+.nav-icon{
+  width:32px;height:32px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
+}
+.ni-moss{background:var(--sage-light)}
+.ni-blush{background:var(--blush-light)}
+.ni-lavender{background:var(--lavender-light)}
+.ni-sky{background:var(--sky-light)}
+.ni-amber{background:var(--amber-light)}
+.ni-sand{background:var(--sand)}
+
+.nav-badge{
+  margin-left:auto;background:var(--blush);color:var(--blush-dark);
+  font-size:0.68rem;font-weight:500;padding:2px 7px;border-radius:100px;
+}
+
+.sidebar-user{
+  margin-top:auto;padding:1rem 1.25rem;
+  border-top:1px solid var(--sand);
+  display:flex;align-items:center;gap:10px;
+}
+.user-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--sage);display:flex;align-items:center;justify-content:center;
+  font-size:0.8rem;font-weight:500;color:white;flex-shrink:0;
+}
+.user-name{font-size:0.85rem;font-weight:500;color:var(--text-dark)}
+.user-plan{font-size:0.72rem;color:var(--text-soft)}
+.user-settings{margin-left:auto;color:var(--text-soft);cursor:pointer;font-size:1rem;transition:color .2s}
+.user-settings:hover{color:var(--moss)}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1;padding:2rem 2.25rem;min-height:100vh;background:var(--cream)}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem}
+.topbar-left h1{font-family:'Lora',serif;font-size:1.55rem;font-weight:600;color:var(--text-dark)}
+.topbar-left p{font-size:0.85rem;color:var(--text-soft);margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.icon-btn{
+  width:38px;height:38px;border-radius:50%;background:white;
+  border:1px solid var(--sand);display:flex;align-items:center;justify-content:center;
+  font-size:1rem;cursor:pointer;transition:background .15s,border-color .15s;position:relative;
+}
+.icon-btn:hover{background:var(--sage-light);border-color:var(--sage)}
+.notif-dot{
+  position:absolute;top:6px;right:6px;width:7px;height:7px;
+  background:var(--blush-dark);border-radius:50%;border:1.5px solid white;
+}
+
+/* ── MOOD CHECK-IN ── */
+.mood-checkin{
+  background:linear-gradient(135deg,var(--moss) 0%,var(--sage-dark) 100%);
+  border-radius:20px;padding:1.5rem 1.75rem;margin-bottom:1.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.mood-checkin::before{
+  content:'';position:absolute;right:-30px;top:-40px;
+  width:160px;height:160px;background:rgba(255,255,255,.07);border-radius:50%;
+}
+.mood-checkin::after{
+  content:'';position:absolute;right:60px;bottom:-60px;
+  width:120px;height:120px;background:rgba(255,255,255,.05);border-radius:50%;
+}
+.mc-left h2{font-family:'Lora',serif;font-size:1.1rem;font-weight:600;color:white;margin-bottom:4px}
+.mc-left p{font-size:0.82rem;color:rgba(255,255,255,.7)}
+.mc-moods{display:flex;gap:8px;z-index:1;position:relative}
+.mc-mood{
+  width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);
+  border:1.5px solid rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+  cursor:pointer;transition:background .2s,transform .15s;
+}
+.mc-mood:hover{background:rgba(255,255,255,.3);transform:scale(1.1)}
+.mc-mood.sel{background:rgba(255,255,255,.35);border-color:white;transform:scale(1.12)}
+
+/* ── STAT CARDS ── */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat-card{
+  background:white;border-radius:16px;padding:1.1rem 1.25rem;
+  border:1px solid var(--sand);transition:transform .2s,border-color .2s;
+}
+.stat-card:hover{transform:translateY(-3px);border-color:var(--sage)}
+.sc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.sc-label{font-size:.75rem;color:var(--text-soft);font-weight:400}
+.sc-icon{
+  width:30px;height:30px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;font-size:.9rem;
+}
+.sci-sage{background:var(--sage-light)}
+.sci-blush{background:var(--blush-light)}
+.sci-lavender{background:var(--lavender-light)}
+.sci-amber{background:var(--amber-light)}
+.sc-val{font-family:'Lora',serif;font-size:1.7rem;font-weight:600;color:var(--text-dark);line-height:1}
+.sc-sub{font-size:.72rem;margin-top:5px}
+.sc-up{color:var(--sage-dark)}
+.sc-down{color:var(--blush-dark)}
+.sc-neutral{color:var(--text-soft)}
+
+/* ── GRID ── */
+.grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+.grid-2b{display:grid;grid-template-columns:1fr 1.2fr;gap:1.25rem}
+
+.card{
+  background:white;border-radius:18px;padding:1.25rem 1.4rem;
+  border:1px solid var(--sand);
+}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem}
+.card-title{font-size:.88rem;font-weight:500;color:var(--text-dark)}
+.card-link{font-size:.75rem;color:var(--sage-dark);cursor:pointer;transition:opacity .2s}
+.card-link:hover{opacity:.7}
+
+/* ── MOOD CHART ── */
+.mood-chart{display:flex;align-items:flex-end;gap:6px;height:80px;margin-bottom:.75rem}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px}
+.bar{
+  width:100%;border-radius:6px 6px 0 0;transition:opacity .2s;cursor:pointer;
+  position:relative;min-height:4px;
+}
+.bar:hover{opacity:.75}
+.bar-label{font-size:.65rem;color:var(--text-soft)}
+.bar-day{font-size:.65rem;color:var(--text-soft)}
+
+.mood-legend{display:flex;gap:12px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--text-soft)}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+
+/* ── INSIGHT CARDS ── */
+.insight-list{display:flex;flex-direction:column;gap:.75rem}
+.insight-item{
+  display:flex;align-items:flex-start;gap:.85rem;
+  background:var(--cream);border-radius:12px;padding:.85rem 1rem;
+  border:1px solid var(--sand);transition:border-color .2s;cursor:pointer;
+}
+.insight-item:hover{border-color:var(--sage)}
+.ins-icon{
+  width:34px;height:34px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
+}
+.ins-body h4{font-size:.82rem;font-weight:500;color:var(--text-dark);margin-bottom:2px}
+.ins-body p{font-size:.75rem;color:var(--text-soft);line-height:1.45}
+
+/* ── UPCOMING ── */
+.session-list{display:flex;flex-direction:column;gap:.75rem}
+.session-item{
+  display:flex;align-items:center;gap:.85rem;
+  padding:.85rem 0;border-bottom:1px solid var(--sand);
+}
+.session-item:last-child{border-bottom:none;padding-bottom:0}
+.sess-date{
+  width:42px;height:46px;border-radius:12px;background:var(--sage-light);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.sess-day{font-size:.65rem;color:var(--moss);font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.sess-num{font-family:'Lora',serif;font-size:1.1rem;font-weight:600;color:var(--moss);line-height:1}
+.sess-info h4{font-size:.83rem;font-weight:500;color:var(--text-dark);margin-bottom:2px}
+.sess-info p{font-size:.73rem;color:var(--text-soft)}
+.sess-badge{
+  margin-left:auto;font-size:.68rem;padding:3px 9px;border-radius:100px;font-weight:500;
+}
+.sb-online{background:var(--sage-light);color:var(--moss)}
+.sb-pending{background:var(--amber-light);color:var(--amber-dark)}
+
+/* ── MOOD RING ── */
+.mood-ring-wrap{display:flex;justify-content:center;margin:1rem 0 .5rem}
+.mood-ring-labels{display:grid;grid-template-columns:1fr 1fr;gap:4px 1rem}
+.mrl-item{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--text-mid)}
+.mrl-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+
+/* ── RESOURCE CARDS ── */
+.resource-list{display:flex;flex-direction:column;gap:.65rem}
+.resource-item{
+  display:flex;align-items:center;gap:.85rem;
+  padding:.75rem;border-radius:12px;background:var(--cream);
+  border:1px solid var(--sand);cursor:pointer;transition:border-color .2s,background .2s;
+}
+.resource-item:hover{border-color:var(--sage);background:var(--sage-light)}
+.res-thumb{
+  width:44px;height:44px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;
+}
+.res-info h4{font-size:.8rem;font-weight:500;color:var(--text-dark);margin-bottom:2px}
+.res-info p{font-size:.7rem;color:var(--text-soft)}
+.res-arrow{margin-left:auto;color:var(--text-soft);font-size:.9rem}
+
+/* ── COMMUNITY SNAPSHOT ── */
+.community-posts{display:flex;flex-direction:column;gap:.75rem}
+.post-item{
+  padding:.9rem;border-radius:12px;background:var(--cream);
+  border:1px solid var(--sand);cursor:pointer;transition:border-color .2s;
+}
+.post-item:hover{border-color:var(--lavender)}
+.post-head{display:flex;align-items:center;gap:8px;margin-bottom:.5rem}
+.post-avatar{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:500;color:white;
+}
+.post-name{font-size:.78rem;font-weight:500;color:var(--text-dark)}
+.post-time{font-size:.68rem;color:var(--text-soft);margin-left:auto}
+.post-text{font-size:.78rem;color:var(--text-mid);line-height:1.5;margin-bottom:.5rem}
+.post-actions{display:flex;gap:12px}
+.post-action{font-size:.7rem;color:var(--text-soft);display:flex;align-items:center;gap:4px;cursor:pointer;transition:color .2s}
+.post-action:hover{color:var(--moss)}
+
+/* ── STREAK ── */
+.streak-grid{display:flex;gap:5px;flex-wrap:wrap;margin:.5rem 0}
+.streak-dot{
+  width:20px;height:20px;border-radius:5px;background:var(--sand);
+  transition:background .2s;cursor:pointer;
+}
+.streak-dot.done{background:var(--sage)}
+.streak-dot.today{background:var(--moss);box-shadow:0 0 0 2px var(--sage)}
+.streak-dot:hover{opacity:.75}
+.streak-stat{display:flex;justify-content:space-between;margin-top:.75rem}
+.streak-num{font-family:'Lora',serif;font-size:1.5rem;font-weight:600;color:var(--moss)}
+.streak-label{font-size:.72rem;color:var(--text-soft)}
+
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">M</div>
+    <span class="logo-text">MindPal</span>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Menu</div>
+    <div class="nav-item active">
+      <div class="nav-icon ni-moss">🏠</div> Beranda
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon ni-lavender">📋</div> Kuesioner
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon ni-blush">💬</div> Chat Konselor
+      <span class="nav-badge">1 baru</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon ni-sky">👥</div> Komunitas
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon ni-amber">📚</div> Sumber Belajar
+    </div>
+  </div>
+
+  <div class="nav-section" style="margin-top:.5rem">
+    <div class="nav-section-label">Lainnya</div>
+    <div class="nav-item">
+      <div class="nav-icon ni-sand">📈</div> Laporan
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon ni-sand">⚙️</div> Pengaturan
+    </div>
+  </div>
+
+  <div class="sidebar-user">
+    <div class="user-avatar">AR</div>
+    <div>
+      <div class="user-name">Arif R.</div>
+      <div class="user-plan">Paket Gratis</div>
+    </div>
+    <div class="user-settings">›</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Selamat pagi, Arif 👋</h1>
+      <p>Senin, 28 April 2025 · Hari ke-14 bersama MindPal</p>
+    </div>
+    <div class="topbar-right">
+      <div class="icon-btn" title="Notifikasi">
+        🔔
+        <div class="notif-dot"></div>
+      </div>
+      <div class="icon-btn" title="Pencarian">🔍</div>
+    </div>
+  </div>
+
+  <!-- MOOD CHECK-IN -->
+  <div class="mood-checkin">
+    <div class="mc-left">
+      <h2>Cek mood harianmu</h2>
+      <p>Bagaimana perasaanmu saat ini? Ceritakan pada kami.</p>
+    </div>
+    <div class="mc-moods" id="moodPicker">
+      <div class="mc-mood" data-label="Sangat sedih" onclick="pickMood(this)">😢</div>
+      <div class="mc-mood" data-label="Sedih" onclick="pickMood(this)">😔</div>
+      <div class="mc-mood" data-label="Biasa" onclick="pickMood(this)">😐</div>
+      <div class="mc-mood sel" data-label="Baik" onclick="pickMood(this)">🙂</div>
+      <div class="mc-mood" data-label="Sangat baik" onclick="pickMood(this)">😊</div>
+    </div>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="sc-top">
+        <span class="sc-label">Skor Mood Minggu Ini</span>
+        <div class="sc-icon sci-sage">😊</div>
+      </div>
+      <div class="sc-val">7.4</div>
+      <div class="sc-sub sc-up">↑ +0.8 dari minggu lalu</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-top">
+        <span class="sc-label">Level Kecemasan</span>
+        <div class="sc-icon sci-blush">😰</div>
+      </div>
+      <div class="sc-val">Rendah</div>
+      <div class="sc-sub sc-up">↓ Turun 18% minggu ini</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-top">
+        <span class="sc-label">Sesi Konseling</span>
+        <div class="sc-icon sci-lavender">💬</div>
+      </div>
+      <div class="sc-val">3</div>
+      <div class="sc-sub sc-neutral">1 sesi berikutnya Rabu</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-top">
+        <span class="sc-label">Streak Check-in</span>
+        <div class="sc-icon sci-amber">🔥</div>
+      </div>
+      <div class="sc-val">14</div>
+      <div class="sc-sub sc-up">Hari berturut-turut!</div>
+    </div>
+  </div>
+
+  <!-- ROW 2: Mood Chart + Insights -->
+  <div class="grid-2">
+    <!-- Mood Chart -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Tren Mood 7 Hari</span>
+        <span class="card-link">Lihat laporan →</span>
+      </div>
+      <div class="mood-chart" id="moodChart"></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:.75rem" id="dayLabels"></div>
+      <div class="mood-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--sage)"></div>Mood harian</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--lavender)"></div>Kualitas tidur</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blush)"></div>Kecemasan</div>
+      </div>
+    </div>
+
+    <!-- Insight AI -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">✨ Insight dari AI</span>
+        <span class="card-link">Semua →</span>
+      </div>
+      <div class="insight-list">
+        <div class="insight-item">
+          <div class="ins-icon" style="background:var(--sage-light)">💤</div>
+          <div class="ins-body">
+            <h4>Tidur lebih awal = mood lebih baik</h4>
+            <p>Data 2 minggu terakhir menunjukkan mood kamu 32% lebih tinggi saat tidur sebelum jam 23.00.</p>
+          </div>
+        </div>
+        <div class="insight-item">
+          <div class="ins-icon" style="background:var(--lavender-light)">🧘</div>
+          <div class="ins-body">
+            <h4>Meditasi rutin terbukti efektif</h4>
+            <p>Kecemasan kamu turun signifikan di hari-hari ketika kamu berlatih pernapasan.</p>
+          </div>
+        </div>
+        <div class="insight-item">
+          <div class="ins-icon" style="background:var(--amber-light)">⚠️</div>
+          <div class="ins-body">
+            <h4>Perhatikan Rabu & Kamis</h4>
+            <p>Mood kamu cenderung lebih rendah di pertengahan minggu. Coba atur jadwal istirahat lebih baik.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 3: Upcoming + Donut + Resources -->
+  <div class="grid-3">
+    <!-- Upcoming Sessions -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Jadwal Konseling</span>
+        <span class="card-link">+ Booking →</span>
+      </div>
+      <div class="session-list">
+        <div class="session-item">
+          <div class="sess-date"><span class="sess-day">Rab</span><span class="sess-num">30</span></div>
+          <div class="sess-info">
+            <h4>Dr. Amira Putri, M.Psi</h4>
+            <p>14.00 – 15.00 WIB · Online</p>
+          </div>
+          <span class="sess-badge sb-online">Konfirmasi</span>
+        </div>
+        <div class="session-item">
+          <div class="sess-date" style="background:var(--blush-light)"><span class="sess-day" style="color:var(--blush-dark)">Sen</span><span class="sess-num" style="color:var(--blush-dark)">5</span></div>
+          <div class="sess-info">
+            <h4>Budi Santoso, S.Psi</h4>
+            <p>10.00 – 11.00 WIB · Online</p>
+          </div>
+          <span class="sess-badge sb-pending">Menunggu</span>
+        </div>
+        <div class="session-item">
+          <div class="sess-date" style="background:var(--lavender-light)"><span class="sess-day" style="color:var(--lavender-dark)">Jum</span><span class="sess-num" style="color:var(--lavender-dark)">9</span></div>
+          <div class="sess-info">
+            <h4>Dr. Amira Putri, M.Psi</h4>
+            <p>13.00 – 14.00 WIB · Online</p>
+          </div>
+          <span class="sess-badge sb-pending">Menunggu</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mood Breakdown Donut -->
+    <div class="card" style="text-align:center">
+      <div class="card-head">
+        <span class="card-title">Distribusi Mood Bulan Ini</span>
+      </div>
+      <div class="mood-ring-wrap">
+        <svg width="130" height="130" viewBox="0 0 130 130">
+          <circle cx="65" cy="65" r="52" fill="none" stroke="var(--sand)" stroke-width="18"/>
+          <!-- Baik: 40% -->
+          <circle cx="65" cy="65" r="52" fill="none" stroke="var(--sage)" stroke-width="18"
+            stroke-dasharray="130.6 196.5" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 65 65)"/>
+          <!-- Cukup: 30% -->
+          <circle cx="65" cy="65" r="52" fill="none" stroke="var(--lavender)" stroke-width="18"
+            stroke-dasharray="97.9 229.2" stroke-dashoffset="-130.6" stroke-linecap="round" transform="rotate(-90 65 65)"/>
+          <!-- Sedih: 20% -->
+          <circle cx="65" cy="65" r="52" fill="none" stroke="var(--blush)" stroke-width="18"
+            stroke-dasharray="65.3 261.8" stroke-dashoffset="-228.5" stroke-linecap="round" transform="rotate(-90 65 65)"/>
+          <!-- Sangat baik: 10% -->
+          <circle cx="65" cy="65" r="52" fill="none" stroke="var(--amber)" stroke-width="18"
+            stroke-dasharray="32.7 294.5" stroke-dashoffset="-293.8" stroke-linecap="round" transform="rotate(-90 65 65)"/>
+          <text x="65" y="60" text-anchor="middle" font-family="Lora,serif" font-size="18" font-weight="600" fill="var(--moss)">7.4</text>
+          <text x="65" y="75" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#8c8680">rata-rata</text>
+        </svg>
+      </div>
+      <div class="mood-ring-labels">
+        <div class="mrl-item"><div class="mrl-dot" style="background:var(--sage)"></div>Baik (40%)</div>
+        <div class="mrl-item"><div class="mrl-dot" style="background:var(--lavender)"></div>Cukup (30%)</div>
+        <div class="mrl-item"><div class="mrl-dot" style="background:var(--blush)"></div>Sedih (20%)</div>
+        <div class="mrl-item"><div class="mrl-dot" style="background:var(--amber)"></div>Sangat baik (10%)</div>
+      </div>
+    </div>
+
+    <!-- Sumber Belajar -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Sumber Belajar Untukmu</span>
+        <span class="card-link">Semua →</span>
+      </div>
+      <div class="resource-list">
+        <div class="resource-item">
+          <div class="res-thumb" style="background:var(--lavender-light)">🧘</div>
+          <div class="res-info">
+            <h4>Teknik Pernapasan 4-7-8</h4>
+            <p>Artikel · 5 menit baca</p>
+          </div>
+          <div class="res-arrow">›</div>
+        </div>
+        <div class="resource-item">
+          <div class="res-thumb" style="background:var(--sage-light)">💤</div>
+          <div class="res-info">
+            <h4>Memperbaiki Kualitas Tidur</h4>
+            <p>Video · 12 menit</p>
+          </div>
+          <div class="res-arrow">›</div>
+        </div>
+        <div class="resource-item">
+          <div class="res-thumb" style="background:var(--blush-light)">🧠</div>
+          <div class="res-info">
+            <h4>Mengenal CBT untuk Pemula</h4>
+            <p>Panduan · 10 menit baca</p>
+          </div>
+          <div class="res-arrow">›</div>
+        </div>
+        <div class="resource-item">
+          <div class="res-thumb" style="background:var(--amber-light)">📝</div>
+          <div class="res-info">
+            <h4>Journaling untuk Kesehatan Mental</h4>
+            <p>Artikel · 7 menit baca</p>
+          </div>
+          <div class="res-arrow">›</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 4: Community + Streak -->
+  <div class="grid-2b">
+    <!-- Community Snapshot -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Dari Komunitas</span>
+        <span class="card-link">Lihat semua →</span>
+      </div>
+      <div class="community-posts">
+        <div class="post-item">
+          <div class="post-head">
+            <div class="post-avatar" style="background:var(--sage-dark)">RA</div>
+            <span class="post-name">Rania A.</span>
+            <span class="post-time">2j lalu</span>
+          </div>
+          <div class="post-text">Setelah 3 minggu rutin meditasi pagi, gue ngerasa jauh lebih fokus dan tenang. Ada yang punya tips lain buat jaga konsistensi? 🌿</div>
+          <div class="post-actions">
+            <div class="post-action">❤ 24</div>
+            <div class="post-action">💬 8 komentar</div>
+          </div>
+        </div>
+        <div class="post-item">
+          <div class="post-head">
+            <div class="post-avatar" style="background:var(--lavender-dark)">DB</div>
+            <span class="post-name">Dimas B.</span>
+            <span class="post-time">5j lalu</span>
+          </div>
+          <div class="post-text">Sharing: teknik grounding 5-4-3-2-1 beneran ngebantu banget pas gue lagi panik. Cobain deh, teman-teman. 💙</div>
+          <div class="post-actions">
+            <div class="post-action">❤ 41</div>
+            <div class="post-action">💬 15 komentar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Streak Tracker -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Check-in Streak</span>
+        <span class="card-link">Lihat detail →</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:.75rem">
+        <div>
+          <div class="streak-num">14 🔥</div>
+          <div class="streak-label">hari berturut-turut</div>
+        </div>
+        <div style="flex:1;background:var(--sage-light);border-radius:12px;padding:.75rem">
+          <div style="font-size:.75rem;color:var(--moss);font-weight:500">Target berikutnya</div>
+          <div style="font-size:.8rem;color:var(--text-mid);margin-top:2px">21 hari — tinggal 7 hari lagi!</div>
+          <div style="height:5px;background:var(--sand);border-radius:100px;margin-top:.5rem;overflow:hidden">
+            <div style="height:100%;width:66%;background:var(--sage-dark);border-radius:100px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="streak-grid" id="streakGrid"></div>
+      <div style="display:flex;gap:8px;margin-top:.5rem;font-size:.7rem;color:var(--text-soft);align-items:center">
+        <div style="width:12px;height:12px;border-radius:3px;background:var(--sage)"></div>Selesai
+        <div style="width:12px;height:12px;border-radius:3px;background:var(--moss)"></div>Hari ini
+        <div style="width:12px;height:12px;border-radius:3px;background:var(--sand)"></div>Belum
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// Mood picker
+function pickMood(el) {
+  document.querySelectorAll('.mc-mood').forEach(m => m.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// Mood chart bars
+const moodData = [
+  { day:'Sen', mood:62, sleep:70, anxiety:45 },
+  { day:'Sel', mood:55, sleep:60, anxiety:55 },
+  { day:'Rab', mood:48, sleep:55, anxiety:65 },
+  { day:'Kam', mood:50, sleep:65, anxiety:58 },
+  { day:'Jum', mood:70, sleep:75, anxiety:35 },
+  { day:'Sab', mood:78, sleep:80, anxiety:28 },
+  { day:'Min', mood:74, sleep:78, anxiety:30 },
+];
+
+const chart = document.getElementById('moodChart');
+const dayLabels = document.getElementById('dayLabels');
+const maxH = 80;
+
+moodData.forEach(d => {
+  const wrap = document.createElement('div');
+  wrap.className = 'bar-wrap';
+
+  const barsInner = document.createElement('div');
+  barsInner.style.cssText = 'display:flex;align-items:flex-end;gap:2px;height:80px;width:100%';
+
+  [[d.mood,'var(--sage)'],[d.sleep,'var(--lavender)'],[d.anxiety,'var(--blush)']].forEach(([val, color]) => {
+    const b = document.createElement('div');
+    b.className = 'bar';
+    b.style.cssText = `flex:1;background:${color};height:${Math.round(val/100*maxH)}px`;
+    barsInner.appendChild(b);
+  });
+
+  const lbl = document.createElement('div');
+  lbl.style.cssText = 'font-size:.65rem;color:var(--text-soft);text-align:center;margin-top:5px';
+  lbl.textContent = d.day;
+
+  wrap.appendChild(barsInner);
+  wrap.appendChild(lbl);
+  chart.appendChild(wrap);
+});
+
+// Streak grid
+const streakGrid = document.getElementById('streakGrid');
+for (let i = 0; i < 28; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'streak-dot';
+  if (i < 13) dot.classList.add('done');
+  else if (i === 13) dot.classList.add('today');
+  streakGrid.appendChild(dot);
+}
+</script>
+</body>
+</html>

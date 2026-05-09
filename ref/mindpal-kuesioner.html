@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MindPal — Kuesioner Mental</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --sage:#b5c9b1;--sage-light:#ddebd9;--sage-dark:#7a9e76;
+  --blush:#e8c9c1;--blush-light:#f5e6e2;--blush-dark:#c9857a;
+  --cream:#f7f3ed;--warm-white:#fdfaf6;--sand:#e8e0d4;--sand-dark:#c8bfb3;
+  --moss:#4a6741;--text-dark:#2d2a26;--text-mid:#5c5751;--text-soft:#8c8680;
+  --lavender:#c5bdd8;--lavender-light:#ebe7f2;--lavender-dark:#9389b8;
+  --amber:#e8c87a;--amber-light:#f7f0d8;--amber-dark:#b89840;
+  --sidebar-w:240px;
+}
+
+html{font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text-dark);background:var(--cream)}
+body{display:flex;min-height:100vh}
+
+/* SIDEBAR (sama seperti dashboard) */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;background:white;
+  border-right:1px solid var(--sand);display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;bottom:0;z-index:50;padding:1.5rem 0;
+}
+.sidebar-logo{display:flex;align-items:center;gap:10px;padding:0 1.25rem 1.5rem;border-bottom:1px solid var(--sand);margin-bottom:1rem}
+.logo-mark{width:34px;height:34px;background:var(--sage);border-radius:50% 50% 50% 20%;display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:15px;color:white;font-weight:600}
+.logo-text{font-family:'Lora',serif;font-size:1.2rem;font-weight:600;color:var(--moss)}
+.nav-section{padding:0 0.75rem;margin-bottom:.25rem}
+.nav-section-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-soft);padding:0 .5rem;margin-bottom:.4rem;margin-top:.75rem}
+.nav-item{display:flex;align-items:center;gap:10px;padding:.6rem .75rem;border-radius:12px;text-decoration:none;color:var(--text-mid);font-size:.88rem;font-weight:400;transition:background .15s,color .15s;cursor:pointer;position:relative}
+.nav-item:hover{background:var(--cream);color:var(--text-dark)}
+.nav-item.active{background:var(--sage-light);color:var(--moss);font-weight:500}
+.nav-item.active::before{content:'';position:absolute;left:-.75rem;top:50%;transform:translateY(-50%);width:3px;height:60%;background:var(--sage-dark);border-radius:0 4px 4px 0}
+.nav-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.ni-moss{background:var(--sage-light)}.ni-blush{background:var(--blush-light)}.ni-lavender{background:var(--lavender-light)}.ni-sky{background:#e5eef6}.ni-amber{background:var(--amber-light)}.ni-sand{background:var(--sand)}
+.nav-badge{margin-left:auto;background:var(--blush);color:var(--blush-dark);font-size:.68rem;font-weight:500;padding:2px 7px;border-radius:100px}
+.sidebar-user{margin-top:auto;padding:1rem 1.25rem;border-top:1px solid var(--sand);display:flex;align-items:center;gap:10px}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:500;color:white;flex-shrink:0}
+.user-name{font-size:.85rem;font-weight:500;color:var(--text-dark)}
+.user-plan{font-size:.72rem;color:var(--text-soft)}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);flex:1;padding:2rem 2.25rem;min-height:100vh;background:var(--cream);display:flex;flex-direction:column}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem}
+.topbar h1{font-family:'Lora',serif;font-size:1.55rem;font-weight:600;color:var(--text-dark)}
+.topbar p{font-size:.85rem;color:var(--text-soft);margin-top:2px}
+.btn-back{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--text-mid);cursor:pointer;transition:color .2s;background:none;border:none;font-family:'DM Sans',sans-serif}
+.btn-back:hover{color:var(--moss)}
+
+/* LAYOUT */
+.quiz-layout{display:grid;grid-template-columns:1fr 300px;gap:1.5rem;align-items:start}
+
+/* PROGRESS */
+.progress-bar-wrap{background:white;border-radius:16px;border:1px solid var(--sand);padding:1.25rem 1.5rem;margin-bottom:1.25rem}
+.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
+.prog-label{font-size:.8rem;color:var(--text-mid);font-weight:500}
+.prog-count{font-size:.78rem;color:var(--text-soft)}
+.prog-track{height:8px;background:var(--sand);border-radius:100px;overflow:hidden}
+.prog-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--sage) 0%,var(--sage-dark) 100%);transition:width .5s cubic-bezier(.4,0,.2,1)}
+.prog-steps{display:flex;justify-content:space-between;margin-top:.75rem}
+.prog-step{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.ps-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--sand);background:white;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:500;color:var(--text-soft);transition:all .2s}
+.ps-dot.done{background:var(--sage);border-color:var(--sage);color:white}
+.ps-dot.active{background:var(--moss);border-color:var(--moss);color:white;box-shadow:0 0 0 4px rgba(74,103,65,.15)}
+.ps-lbl{font-size:.6rem;color:var(--text-soft)}
+
+/* QUESTION CARD */
+.q-card{background:white;border-radius:20px;border:1px solid var(--sand);overflow:hidden;min-height:420px;display:flex;flex-direction:column}
+.q-card-top{padding:1.5rem 1.75rem 0}
+.q-category{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:.3rem .85rem;border-radius:100px;margin-bottom:1rem}
+.cat-mood{background:var(--sage-light);color:var(--moss)}
+.cat-stress{background:var(--blush-light);color:var(--blush-dark)}
+.cat-sleep{background:var(--lavender-light);color:var(--lavender-dark)}
+.cat-social{background:#e5eef6;color:#4a7a9b}
+.cat-energy{background:var(--amber-light);color:var(--amber-dark)}
+
+.q-number{font-size:.75rem;color:var(--text-soft);margin-bottom:.5rem}
+.q-text{font-family:'Lora',serif;font-size:1.3rem;font-weight:600;line-height:1.4;color:var(--text-dark);margin-bottom:.5rem}
+.q-sub{font-size:.83rem;color:var(--text-soft);line-height:1.5;margin-bottom:1.5rem;font-style:italic}
+
+/* ANSWER TYPES */
+.q-body{padding:0 1.75rem 1.75rem;flex:1;display:flex;flex-direction:column;justify-content:space-between}
+
+/* Option buttons */
+.options-grid{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
+.option-btn{
+  display:flex;align-items:center;gap:1rem;padding:.85rem 1.1rem;
+  border-radius:14px;border:1.5px solid var(--sand);background:var(--cream);
+  cursor:pointer;transition:border-color .2s,background .2s,transform .15s;
+  text-align:left;font-family:'DM Sans',sans-serif;
+}
+.option-btn:hover{border-color:var(--sage);background:var(--sage-light);transform:translateX(3px)}
+.option-btn.selected{border-color:var(--moss);background:var(--sage-light)}
+.option-btn.selected .opt-radio{background:var(--moss);border-color:var(--moss)}
+.option-btn.selected .opt-radio::after{opacity:1}
+.opt-radio{
+  width:20px;height:20px;border-radius:50%;border:2px solid var(--sand-dark);
+  background:white;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;position:relative;
+}
+.opt-radio::after{content:'';width:8px;height:8px;border-radius:50%;background:white;opacity:0;transition:opacity .2s}
+.opt-text{font-size:.88rem;color:var(--text-mid)}
+.opt-emoji{font-size:1.2rem;flex-shrink:0}
+
+/* Scale slider */
+.scale-wrap{margin-bottom:1.5rem}
+.scale-labels{display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-soft);margin-bottom:.5rem}
+.scale-track{position:relative;height:36px;display:flex;align-items:center;gap:6px}
+.scale-btn{
+  flex:1;height:36px;border-radius:9px;border:1.5px solid var(--sand);
+  background:var(--cream);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:500;color:var(--text-soft);transition:all .2s;
+}
+.scale-btn:hover{border-color:var(--sage);background:var(--sage-light)}
+.scale-btn.sel{border-color:var(--moss);background:var(--moss);color:white}
+
+/* Text area */
+.textarea-wrap textarea{
+  width:100%;border:1.5px solid var(--sand);border-radius:14px;
+  padding:.9rem 1rem;font-family:'DM Sans',sans-serif;font-size:.88rem;
+  color:var(--text-dark);background:var(--cream);resize:none;
+  outline:none;line-height:1.6;transition:border-color .2s;
+  margin-bottom:1.5rem;
+}
+.textarea-wrap textarea:focus{border-color:var(--sage);background:white}
+.textarea-wrap textarea::placeholder{color:var(--text-soft)}
+
+/* Emoji mood picker */
+.emoji-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;margin-bottom:1.5rem}
+.emoji-opt{
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;
+  padding:.75rem .5rem;border-radius:14px;border:1.5px solid var(--sand);
+  background:var(--cream);cursor:pointer;transition:all .2s;
+}
+.emoji-opt:hover{border-color:var(--sage);background:var(--sage-light);transform:translateY(-2px)}
+.emoji-opt.sel{border-color:var(--moss);background:var(--sage-light)}
+.emoji-face{font-size:1.8rem}
+.emoji-lbl{font-size:.65rem;color:var(--text-soft);text-align:center}
+
+/* NAV buttons */
+.q-nav{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;border-top:1px solid var(--sand)}
+.btn-prev{background:none;border:1.5px solid var(--sand);color:var(--text-mid);padding:.65rem 1.4rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;transition:all .2s}
+.btn-prev:hover{border-color:var(--sage-dark);color:var(--moss)}
+.btn-next{background:var(--moss);border:none;color:white;padding:.65rem 1.75rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+.btn-next:hover{background:var(--sage-dark);transform:translateY(-1px)}
+.btn-next:disabled{background:var(--sand-dark);cursor:not-allowed;transform:none}
+.q-skip{font-size:.75rem;color:var(--text-soft);cursor:pointer;transition:color .2s}
+.q-skip:hover{color:var(--moss)}
+
+/* SIDEBAR CARDS */
+.side-card{background:white;border-radius:16px;border:1px solid var(--sand);padding:1.1rem 1.25rem;margin-bottom:1rem}
+.side-card h3{font-size:.83rem;font-weight:500;color:var(--text-dark);margin-bottom:.85rem}
+.side-tip{display:flex;gap:.75rem;align-items:flex-start;padding:.75rem;background:var(--cream);border-radius:10px;border:1px solid var(--sand);margin-bottom:.5rem}
+.tip-icon{font-size:1rem;flex-shrink:0}
+.tip-text{font-size:.76rem;color:var(--text-mid);line-height:1.45}
+
+/* Summary preview */
+.answer-list{display:flex;flex-direction:column;gap:.5rem}
+.ans-item{display:flex;align-items:center;gap:.6rem;font-size:.75rem;color:var(--text-mid)}
+.ans-check{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0}
+.ac-done{background:var(--sage-light);color:var(--moss)}
+.ac-active{background:var(--moss);color:white}
+.ac-todo{background:var(--sand);color:var(--text-soft)}
+
+/* RESULT SCREEN */
+.result-screen{display:none;flex-direction:column;align-items:center;text-align:center;padding:2rem}
+.result-ring{margin:1rem auto 1.5rem;position:relative;width:140px;height:140px}
+.result-score{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Lora',serif;font-size:2rem;font-weight:600;color:var(--moss)}
+.result-score span{display:block;font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:400;color:var(--text-soft)}
+.result-title{font-family:'Lora',serif;font-size:1.4rem;font-weight:600;color:var(--text-dark);margin-bottom:.5rem}
+.result-sub{font-size:.88rem;color:var(--text-mid);line-height:1.6;max-width:380px;margin:0 auto 1.5rem}
+.result-tags{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.r-tag{padding:.3rem .9rem;border-radius:100px;font-size:.75rem;font-weight:500}
+.rt-good{background:var(--sage-light);color:var(--moss)}
+.rt-warn{background:var(--amber-light);color:var(--amber-dark)}
+.rt-alert{background:var(--blush-light);color:var(--blush-dark)}
+.result-actions{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.ra-btn{padding:.75rem 1.5rem;border-radius:100px;font-size:.88rem;font-weight:500;cursor:pointer;transition:all .2s;border:none;font-family:'DM Sans',sans-serif}
+.ra-primary{background:var(--moss);color:white}
+.ra-primary:hover{background:var(--sage-dark)}
+.ra-ghost{background:white;border:1.5px solid var(--sand);color:var(--text-mid)}
+.ra-ghost:hover{border-color:var(--sage);color:var(--moss)}
+.result-recs{margin-top:1.5rem;width:100%;text-align:left}
+.rec-item{display:flex;align-items:center;gap:.85rem;padding:.85rem 1rem;background:var(--cream);border-radius:12px;border:1px solid var(--sand);margin-bottom:.6rem;cursor:pointer;transition:border-color .2s}
+.rec-item:hover{border-color:var(--sage)}
+.rec-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.rec-info h4{font-size:.82rem;font-weight:500;color:var(--text-dark)}
+.rec-info p{font-size:.72rem;color:var(--text-soft)}
+
+/* TRANSITIONS */
+.q-card-content{animation:slideIn .35s cubic-bezier(.4,0,.2,1) both}
+@keyframes slideIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+.fade-in{animation:fadeIn .4s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">M</div>
+    <span class="logo-text">MindPal</span>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Menu</div>
+    <div class="nav-item"><div class="nav-icon ni-moss">🏠</div>Beranda</div>
+    <div class="nav-item active"><div class="nav-icon ni-lavender">📋</div>Kuesioner</div>
+    <div class="nav-item"><div class="nav-icon ni-blush">💬</div>Chat Konselor<span class="nav-badge">1 baru</span></div>
+    <div class="nav-item"><div class="nav-icon ni-sky">👥</div>Komunitas</div>
+    <div class="nav-item"><div class="nav-icon ni-amber">📚</div>Sumber Belajar</div>
+  </div>
+  <div class="nav-section" style="margin-top:.5rem">
+    <div class="nav-section-label">Lainnya</div>
+    <div class="nav-item"><div class="nav-icon ni-sand">📈</div>Laporan</div>
+    <div class="nav-item"><div class="nav-icon ni-sand">⚙️</div>Pengaturan</div>
+  </div>
+  <div class="sidebar-user">
+    <div class="user-avatar">AR</div>
+    <div><div class="user-name">Arif R.</div><div class="user-plan">Paket Gratis</div></div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div>
+      <button class="btn-back" onclick="goBack()">← Kembali ke Dashboard</button>
+      <h1 style="margin-top:.3rem">Kuesioner Kesehatan Mental</h1>
+      <p>Luangkan 5–10 menit untuk menjawab dengan jujur. Semua data bersifat privat.</p>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar-wrap">
+    <div class="prog-top">
+      <span class="prog-label" id="progLabel">Pertanyaan 1 dari 8</span>
+      <span class="prog-count" id="progCount">0% selesai</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <div class="prog-steps" id="progSteps"></div>
+  </div>
+
+  <div class="quiz-layout">
+    <!-- QUESTION CARD -->
+    <div class="q-card" id="qCard">
+      <div class="q-card-top" id="qTop"></div>
+      <div class="q-body" id="qBody"></div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div id="quizSidebar">
+      <div class="side-card">
+        <h3>💡 Tips menjawab</h3>
+        <div class="side-tip">
+          <div class="tip-icon">🎯</div>
+          <div class="tip-text">Jawab berdasarkan perasaan kamu dalam <strong>7 hari terakhir</strong>, bukan hari ini saja.</div>
+        </div>
+        <div class="side-tip">
+          <div class="tip-icon">🔒</div>
+          <div class="tip-text">Semua jawaban bersifat <strong>privat</strong> dan hanya digunakan untuk analisis pribadimu.</div>
+        </div>
+        <div class="side-tip">
+          <div class="tip-icon">✨</div>
+          <div class="tip-text">Tidak ada jawaban benar atau salah. Jujurlah dengan dirimu sendiri.</div>
+        </div>
+      </div>
+      <div class="side-card">
+        <h3>📝 Progres jawabanmu</h3>
+        <div class="answer-list" id="answerSummary"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const questions = [
+  {
+    id:1, cat:'Mood', catClass:'cat-mood', emoji:'😊',
+    text:'Bagaimana suasana hati kamu secara keseluruhan?',
+    sub:'Bayangkan rata-rata perasaanmu dalam seminggu terakhir.',
+    type:'emoji',
+    options:[
+      {e:'😢',l:'Sangat buruk'},{e:'😔',l:'Buruk'},{e:'😐',l:'Biasa saja'},{e:'🙂',l:'Cukup baik'},{e:'😊',l:'Sangat baik'}
+    ]
+  },
+  {
+    id:2, cat:'Stres', catClass:'cat-stress', emoji:'😰',
+    text:'Seberapa sering kamu merasa kewalahan atau stres?',
+    sub:'Pikirkan situasi di rumah, sekolah, atau tempat kerja.',
+    type:'options',
+    options:[
+      {text:'Hampir tidak pernah — saya merasa cukup terkendali'},
+      {text:'Sesekali — biasanya masih bisa diatasi'},
+      {text:'Cukup sering — sering terasa berat'},
+      {text:'Hampir setiap hari — sangat menguras energi'},
+    ]
+  },
+  {
+    id:3, cat:'Tidur', catClass:'cat-sleep', emoji:'💤',
+    text:'Bagaimana kualitas tidurmu belakangan ini?',
+    sub:'Termasuk kemudahan tidur, durasi, dan kualitas istirahat.',
+    type:'scale',
+    scaleMin:'Sangat buruk',scaleMax:'Sangat baik',
+  },
+  {
+    id:4, cat:'Kecemasan', catClass:'cat-stress', emoji:'💭',
+    text:'Seberapa sering pikiran cemas mengganggu aktivitasmu?',
+    sub:'Misalnya rasa khawatir berlebihan, pikiran tidak bisa berhenti, atau takut tanpa alasan jelas.',
+    type:'options',
+    options:[
+      {text:'Jarang sekali — saya bisa fokus dengan baik'},
+      {text:'Kadang-kadang — tidak terlalu mengganggu'},
+      {text:'Cukup sering — lumayan menganggu konsentrasi'},
+      {text:'Sangat sering — sulit sekali mengontrolnya'},
+    ]
+  },
+  {
+    id:5, cat:'Energi', catClass:'cat-energy', emoji:'⚡',
+    text:'Bagaimana tingkat energi dan motivasimu sehari-hari?',
+    sub:'Apakah kamu merasa bersemangat menjalani hari, atau sebaliknya?',
+    type:'scale',
+    scaleMin:'Sangat rendah',scaleMax:'Sangat tinggi',
+  },
+  {
+    id:6, cat:'Sosial', catClass:'cat-social', emoji:'👥',
+    text:'Bagaimana hubunganmu dengan orang-orang di sekitarmu?',
+    sub:'Keluarga, teman, rekan kerja — apakah kamu merasa terhubung atau terisolasi?',
+    type:'options',
+    options:[
+      {text:'Saya merasa sangat terhubung dan didukung'},
+      {text:'Cukup baik, meskipun ada kalanya merasa sendirian'},
+      {text:'Sering merasa kurang dimengerti atau kesepian'},
+      {text:'Saya cenderung menarik diri dari orang lain'},
+    ]
+  },
+  {
+    id:7, cat:'Mood', catClass:'cat-mood', emoji:'🌱',
+    text:'Apakah ada hal yang ingin kamu ceritakan lebih lanjut?',
+    sub:'Opsional — kamu bisa berbagi situasi atau perasaan yang kamu alami saat ini.',
+    type:'textarea',
+    placeholder:'Tulis di sini jika ada yang ingin kamu ceritakan... (opsional)'
+  },
+  {
+    id:8, cat:'Mood', catClass:'cat-mood', emoji:'🎯',
+    text:'Apa tujuan utamamu menggunakan MindPal?',
+    sub:'Jawaban ini membantu kami menyesuaikan saran dan konten yang relevan untukmu.',
+    type:'options',
+    options:[
+      {text:'Mengelola stres dan kecemasan sehari-hari'},
+      {text:'Meningkatkan kualitas tidur dan energi'},
+      {text:'Memahami kondisi emosional saya lebih baik'},
+      {text:'Mencari dukungan profesional yang tepat'},
+    ]
+  }
+];
+
+const sectionLabels = ['Mood','Stres','Tidur','Kecemasan','Energi','Sosial','Refleksi','Tujuan'];
+let current = 0;
+let answers = new Array(questions.length).fill(null);
+
+function buildSteps() {
+  const cont = document.getElementById('progSteps');
+  cont.innerHTML = '';
+  questions.forEach((q,i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'prog-step';
+    wrap.innerHTML = `<div class="ps-dot" id="ps-${i}">${i+1}</div><div class="ps-lbl">${sectionLabels[i]}</div>`;
+    wrap.onclick = () => { if(answers[i]!==null || i===current) goTo(i); };
+    cont.appendChild(wrap);
+  });
+}
+
+function buildAnswerSummary() {
+  const cont = document.getElementById('answerSummary');
+  cont.innerHTML = '';
+  questions.forEach((q,i) => {
+    const done = answers[i] !== null;
+    const active = i === current;
+    const div = document.createElement('div');
+    div.className = 'ans-item';
+    const cls = active ? 'ac-active' : done ? 'ac-done' : 'ac-todo';
+    const ico = active ? '→' : done ? '✓' : '·';
+    div.innerHTML = `<div class="ans-check ${cls}">${ico}</div><span style="color:${done||active?'var(--text-dark)':'var(--text-soft)'}">${sectionLabels[i]}</span>`;
+    cont.appendChild(div);
+  });
+}
+
+function updateProgress() {
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progLabel').textContent = `Pertanyaan ${current+1} dari ${questions.length}`;
+  document.getElementById('progCount').textContent = pct + '% selesai';
+  document.querySelectorAll('.ps-dot').forEach((d,i) => {
+    d.className = 'ps-dot' + (i < current && answers[i]!==null ? ' done' : i===current ? ' active' : '');
+  });
+  buildAnswerSummary();
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  const top = document.getElementById('qTop');
+  const body = document.getElementById('qBody');
+
+  top.innerHTML = `
+    <div class="q-card-content">
+      <span class="q-category ${q.catClass}">${q.emoji} ${q.cat}</span>
+      <div class="q-number">Pertanyaan ${q.id} dari ${questions.length}</div>
+      <div class="q-text">${q.text}</div>
+      <div class="q-sub">${q.sub}</div>
+    </div>`;
+
+  let answerHTML = '';
+  let navHTML = `
+    <div class="q-nav">
+      <button class="btn-prev" onclick="prevQ()" ${current===0?'style="visibility:hidden"':''}>← Sebelumnya</button>
+      <span class="q-skip" onclick="skipQ()">Lewati</span>
+      <button class="btn-next" id="btnNext" onclick="nextQ()" ${answers[current]===null&&q.type!=='textarea'?'disabled':''}>
+        ${current===questions.length-1?'Lihat Hasil ✨':'Lanjut →'}
+      </button>
+    </div>`;
+
+  if (q.type === 'emoji') {
+    answerHTML = `<div class="emoji-grid">` +
+      q.options.map((o,i) => `
+        <div class="emoji-opt ${answers[current]===i?'sel':''}" onclick="selectEmoji(${i})">
+          <div class="emoji-face">${o.e}</div>
+          <div class="emoji-lbl">${o.l}</div>
+        </div>`).join('') + `</div>`;
+  } else if (q.type === 'options') {
+    answerHTML = `<div class="options-grid">` +
+      q.options.map((o,i) => `
+        <div class="option-btn ${answers[current]===i?'selected':''}" onclick="selectOption(${i})">
+          <div class="opt-radio"></div>
+          <span class="opt-text">${o.text}</span>
+        </div>`).join('') + `</div>`;
+  } else if (q.type === 'scale') {
+    const cur = answers[current];
+    answerHTML = `
+      <div class="scale-wrap">
+        <div class="scale-labels"><span>${q.scaleMin}</span><span>${q.scaleMax}</span></div>
+        <div class="scale-track">
+          ${[1,2,3,4,5,6,7,8,9,10].map(n=>`
+            <div class="scale-btn ${cur===n?'sel':''}" onclick="selectScale(${n})">${n}</div>`).join('')}
+        </div>
+      </div>`;
+  } else if (q.type === 'textarea') {
+    answerHTML = `
+      <div class="textarea-wrap">
+        <textarea rows="5" id="taInput" placeholder="${q.placeholder}" oninput="onTextarea(this.value)">${answers[current]||''}</textarea>
+      </div>`;
+  }
+
+  body.innerHTML = `<div class="q-card-content">${answerHTML}</div>${navHTML}`;
+  updateProgress();
+}
+
+function selectOption(i) {
+  answers[current] = i;
+  document.querySelectorAll('.option-btn').forEach((b,j) => b.classList.toggle('selected', j===i));
+  document.getElementById('btnNext').disabled = false;
+}
+
+function selectEmoji(i) {
+  answers[current] = i;
+  document.querySelectorAll('.emoji-opt').forEach((b,j) => b.classList.toggle('sel', j===i));
+  document.getElementById('btnNext').disabled = false;
+}
+
+function selectScale(n) {
+  answers[current] = n;
+  document.querySelectorAll('.scale-btn').forEach((b,j) => b.classList.toggle('sel', j+1===n));
+  document.getElementById('btnNext').disabled = false;
+}
+
+function onTextarea(val) {
+  answers[current] = val || '';
+  document.getElementById('btnNext').disabled = false;
+}
+
+function nextQ() {
+  if (current < questions.length - 1) { current++; renderQuestion(); }
+  else showResult();
+}
+
+function prevQ() { if (current > 0) { current--; renderQuestion(); } }
+
+function skipQ() {
+  answers[current] = answers[current] ?? 'skipped';
+  if (current < questions.length - 1) { current++; renderQuestion(); }
+  else showResult();
+}
+
+function goTo(i) { current = i; renderQuestion(); }
+function goBack() { history.back(); }
+
+function showResult() {
+  // compute fake score from answers
+  const scored = answers.filter(a => a!==null && a!=='skipped').length;
+  const score = Math.min(100, Math.round(55 + scored * 6 + Math.random() * 8));
+
+  const card = document.getElementById('qCard');
+  const sidebar = document.getElementById('quizSidebar');
+
+  // Update progress to 100%
+  document.getElementById('progFill').style.width = '100%';
+  document.getElementById('progLabel').textContent = 'Kuesioner selesai!';
+  document.getElementById('progCount').textContent = '100% selesai';
+  document.querySelectorAll('.ps-dot').forEach(d => { d.className = 'ps-dot done'; });
+
+  card.style.minHeight = 'auto';
+  card.innerHTML = `
+    <div class="result-screen fade-in" style="display:flex">
+      <div style="width:48px;height:48px;border-radius:50%;background:var(--sage-light);display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto .75rem">✨</div>
+      <div class="result-title">Analisis Selesai!</div>
+      <div class="result-sub">Berdasarkan jawabanmu, AI MindPal telah menyusun profil kondisi mentalmu. Berikut ringkasannya.</div>
+
+      <div class="result-ring">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle cx="70" cy="70" r="56" fill="none" stroke="var(--sand)" stroke-width="12"/>
+          <circle cx="70" cy="70" r="56" fill="none" stroke="var(--sage)" stroke-width="12"
+            stroke-dasharray="${Math.round(2*Math.PI*56*score/100)} ${Math.round(2*Math.PI*56)}"
+            stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 70 70)"
+            style="transition:stroke-dasharray 1s ease"/>
+        </svg>
+        <div class="result-score">${score}<span>/ 100</span></div>
+      </div>
+
+      <div class="result-tags">
+        <span class="r-tag rt-good">Mood: Cukup Baik</span>
+        <span class="r-tag rt-warn">Stres: Sedang</span>
+        <span class="r-tag rt-good">Tidur: Membaik</span>
+        <span class="r-tag rt-alert">Kecemasan: Perlu Perhatian</span>
+      </div>
+
+      <div class="result-recs">
+        <div style="font-size:.82rem;font-weight:500;color:var(--text-dark);margin-bottom:.75rem">Rekomendasi untukmu</div>
+        <div class="rec-item">
+          <div class="rec-icon" style="background:var(--lavender-light)">🧘</div>
+          <div class="rec-info"><h4>Latihan Mindfulness 10 Menit</h4><p>Cocok untuk mengurangi kecemasan yang sedang kamu alami</p></div>
+          <span style="margin-left:auto;color:var(--text-soft)">›</span>
+        </div>
+        <div class="rec-item">
+          <div class="rec-icon" style="background:var(--sage-light)">💤</div>
+          <div class="rec-info"><h4>Panduan Tidur Lebih Berkualitas</h4><p>Tingkatkan rutinitas tidurmu dengan teknik sederhana</p></div>
+          <span style="margin-left:auto;color:var(--text-soft)">›</span>
+        </div>
+        <div class="rec-item">
+          <div class="rec-icon" style="background:var(--blush-light)">💬</div>
+          <div class="rec-info"><h4>Konsultasi dengan Psikolog</h4><p>Disarankan untuk mendiskusikan kecemasan lebih lanjut</p></div>
+          <span style="margin-left:auto;color:var(--text-soft)">›</span>
+        </div>
+      </div>
+
+      <div class="result-actions">
+        <button class="ra-btn ra-primary">Lihat Laporan Lengkap</button>
+        <button class="ra-btn ra-ghost" onclick="resetQuiz()">Ulangi Kuesioner</button>
+        <button class="ra-btn ra-ghost">Booking Konselor</button>
+      </div>
+    </div>`;
+
+  sidebar.innerHTML = `
+    <div class="side-card fade-in">
+      <h3>📊 Ringkasan Jawaban</h3>
+      <div class="answer-list">
+        ${sectionLabels.map((l,i) => `
+          <div class="ans-item">
+            <div class="ans-check ac-done">✓</div>
+            <span style="color:var(--text-dark)">${l}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="side-card fade-in">
+      <h3>🔔 Langkah Selanjutnya</h3>
+      <div class="side-tip"><div class="tip-icon">📋</div><div class="tip-text">Laporan lengkap sudah tersedia di menu <strong>Laporan</strong>.</div></div>
+      <div class="side-tip"><div class="tip-icon">💬</div><div class="tip-text">Coba booking sesi konseling pertamamu — gratis untuk pengguna baru.</div></div>
+      <div class="side-tip"><div class="tip-icon">🔁</div><div class="tip-text">Ulangi kuesioner ini setiap minggu untuk memantau perkembanganmu.</div></div>
+    </div>`;
+}
+
+function resetQuiz() {
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+  document.getElementById('qCard').style.minHeight = '420px';
+  buildSteps();
+  renderQuestion();
+}
+
+// INIT
+buildSteps();
+renderQuestion();
+</script>
+</body>
+</html>
