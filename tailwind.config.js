@@ -1,28 +1,39 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{svelte,js,ts,jsx,tsx}",
-  ],
+  content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
     extend: {
-      colors: {
-        sage: { light: '#e0e7ff', DEFAULT: '#6366f1', dark: '#4f46e5' },
-        blush: { light: '#f1f5f9', DEFAULT: '#cbd5e1', dark: '#64748b' },
-        cream: '#f8fafc',
-        'warm-white': '#ffffff',
-        sand: { DEFAULT: '#e2e8f0', dark: '#94a3b8' },
-        moss: '#4f46e5',
-        text: { dark: '#0f172a', mid: '#334155', soft: '#64748b' },
-        lavender: { light: '#eef2ff', DEFAULT: '#c7d2fe', dark: '#6366f1' },
-        sky: { light: '#f1f5f9', DEFAULT: '#cbd5e1', dark: '#475569' },
-        amber: { light: '#eef2ff', DEFAULT: '#a5b4fc', dark: '#4338ca' },
-      },
       fontFamily: {
-        lora: ['Inter', 'sans-serif'],
-        sans: ['Inter', 'sans-serif'],
+        sans: ['DM Sans', 'sans-serif'],
+        lora: ['Lora', 'serif'],
+      },
+      colors: {
+        cream: '#FDFBF7',
+        sand: '#E5E5E5',
+        'sand-dark': '#D1D1D1',
+        moss: '#557C55',
+        'text-dark': '#222222',
+        'text-mid': '#555555',
+        'text-soft': '#888888',
+        sage: {
+          DEFAULT: '#A3B899',
+          light: '#EAF0E7',
+          dark: '#7A916E',
+        },
+        lavender: {
+          light: '#F0E7F5',
+          dark: '#8E73A6',
+        },
+        blush: {
+          light: '#FBE8E8',
+          dark: '#C97A7E',
+        },
+        sky: {
+          light: '#E6F0F9',
+          dark: '#5B8FB9',
+        },
       }
-    },
+    }
   },
-  plugins: [],
-}
+  plugins: []
+};

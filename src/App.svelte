@@ -6,6 +6,7 @@
     import Chat from './pages/Chat.svelte';
     import Komunitas from './pages/Komunitas.svelte';
     import Kuesioner from './pages/Kuesioner.svelte';
+    import SumberBelajar from './pages/SumberBelajar.svelte';
 
     const routes = {
         '/': Landing,
@@ -13,7 +14,8 @@
         '/dashboard': Dashboard,
         '/chat': Chat,
         '/komunitas': Komunitas,
-        '/kuesioner': Kuesioner
+        '/kuesioner': Kuesioner,
+        '/sumber-belajar': SumberBelajar
     };
 </script>
 
